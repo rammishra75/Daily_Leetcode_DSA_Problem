@@ -1,23 +1,24 @@
 class Solution {
     public int integerBreak(int n) {
-       if (n == 2) {
+        if (n <= 1) {
+            return 0;
+        }
+        int[] memo = new int[n + 1];
+        return maxProduct(n, memo);
+    }
+    
+    private int maxProduct(int n, int[] memo) {
+        if (n == 2) {
             return 1;
         }
-        if (n == 3) {
-            return 2;
+        if (memo[n] != 0) {
+            return memo[n];
         }
-
-        // Try to divide n into as many threes as possible
-        int threes = n / 3;
-        int remainder = n % 3;
-
-        if (remainder == 1) {
-            threes -= 1; // remove 3 * 1
-            remainder = 4; // create 2 * 2
-        } else if (remainder == 0) {
-            remainder = 1; // when remainder is 0, set 1 which doesn't affect your answer.
+        int max = 0;
+        for (int i = 1; i < n; i++) {
+            max = Math.max(max, Math.max(i * (n - i), i * maxProduct(n - i, memo)));
         }
-
-        return (int) (Math.pow(3, threes) * remainder);        
+        memo[n] = max;
+        return max;
     }
 }
