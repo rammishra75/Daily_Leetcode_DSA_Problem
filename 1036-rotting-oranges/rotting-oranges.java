@@ -1,20 +1,20 @@
 class Solution {
     class Pair{
-        int first;
-        int second;
+        int row;
+        int col;
         int time;
-        Pair(int first, int second, int time){
-            this.first = first;
-            this.second = second;
-            this.time = time;
+        Pair(int r, int c, int t){
+            this.row = r;
+            this.col = c;
+            this.time = t;
         }
     }
     public int orangesRotting(int[][] grid) {
         int n = grid.length;
         int m = grid[0].length;
-        int[][] vis = new int[n][m];
         Queue<Pair> q = new LinkedList<>();
         int cntfresh = 0;
+        int[][] vis = new int[n][m];
         for(int i = 0; i < n; i++){
             for(int j = 0; j < m; j++){
                 if(grid[i][j] == 2){
@@ -25,33 +25,31 @@ class Solution {
                     vis[i][j] = 0;
                 }
                 if(grid[i][j] == 1){
-                    cntfresh += 1;
+                    cntfresh++;
                 }
             }
         }
         int cnt = 0;
         int time = 0;
-        int[] dr = {-1, 0, 1, 0};
-        int[] dc = {0, 1, 0, -1};
+        int[] drow = {-1, 0, 1, 0};
+        int[] dcol = {0, 1, 0, -1};
         while(!q.isEmpty()){
-            int r = q.peek().first;
-            int c = q.peek().second;
+            int r = q.peek().row;
+            int c = q.peek().col;
             int t = q.peek().time;
-            time = Math.max(time, t);
             q.remove();
+            time = Math.max(time, t);
             for(int i = 0; i < 4; i++){
-                int nr = r + dr[i];
-                int nc = c + dc[i];
-                if(nr >= 0 && nr < n && nc >= 0 && nc < m && vis[nr][nc] == 0 && grid[nr][nc] == 1){
-                    q.add(new Pair(nr, nc, t + 1));
-                    vis[nr][nc] = 2;
+                int nrow = r + drow[i];
+                int ncol = c + dcol[i];
+                if(nrow >= 0 && nrow < n && ncol >= 0 && ncol < m && vis[nrow][ncol] == 0 && grid[nrow][ncol] == 1){
+                    q.add(new Pair(nrow, ncol, t + 1));
+                    vis[nrow][ncol] = 2;
                     cnt++;
                 }
             }
         }
-        if(cntfresh != cnt){
-            return -1;
-        }
+        if(cnt != cntfresh) return -1;
         return time;
     }
 }
