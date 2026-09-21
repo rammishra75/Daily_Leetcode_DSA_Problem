@@ -1,12 +1,12 @@
 # Write your MySQL query statement below
 SELECT
-    name,
-    bonus
-FROM 
+    e.name,
+    b.bonus
+FROM
     Employee e
 LEFT JOIN
     Bonus b
 ON
-    e.empID = b.empId
+    e.empId = b.empId
 WHERE
-    bonus < 1000 || b.bonus IS NULL;
+    b.empId IS NULL OR b.bonus < 1000;
