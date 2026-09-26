@@ -1,40 +1,49 @@
 class Solution {
     public List<List<String>> displayTable(List<List<String>> orders) {
-        List<String> food = new ArrayList<>();
-        List<Integer> table = new ArrayList<>(); 
-        for(List<String> s : orders){
-            if(!food.contains(s.get(2))) food.add(s.get(2));
-            if(!table.contains(Integer.parseInt(s.get(1)))) table.add(Integer.parseInt(s.get(1)));
+        // TreeSet automatically keeps food items unique and sorted alphabetically
+        TreeSet<String> foodItems = new TreeSet<>();
+        // TreeSet automatically keeps tables unique and sorted numerically
+        TreeSet<Integer> tables = new TreeSet<>();
+        
+        // Map to keep track of counts: TableNumber -> (FoodItem -> Count)
+        Map<Integer, Map<String, Integer>> tableToFoodCount = new HashMap<>();
+
+        // Single pass to collect unique items, tables, and populate counts
+        for (List<String> order : orders) {
+            int tableNum = Integer.parseInt(order.get(1));
+            String food = order.get(2);
+
+            foodItems.add(food);
+            tables.add(tableNum);
+
+            // Compute the inner map for the table and update the count efficiently
+            tableToFoodCount.computeIfAbsent(tableNum, k -> new HashMap<>())
+                             .put(food, tableToFoodCount.get(tableNum).getOrDefault(food, 0) + 1);
         }
-        Collections.sort(food);
-        Collections.sort(table);
-        List<List<String>> ans = new ArrayList<>();
-        List<String> temp = new ArrayList<>();
-        temp.add("Table");
-        HashMap<String, Integer> map = new HashMap<>();
-        for(int i = 0; i < food.size(); i++){
-            temp.add(food.get(i));
-            map.put(food.get(i), i);
-        }
-        HashMap<Integer, Integer> index = new HashMap<>();
-        for(int i = 0; i < table.size(); i++){
-            index.put(table.get(i), i);
-        }
-        int[][] freq = new int[table.size()][temp.size() - 1];
-        ans.add(temp);
-        for(List<String> s : orders){
-            int ind = index.get(Integer.parseInt(s.get(1)));
-            int dish_ind = map.get(s.get(2));
-            freq[ind][dish_ind]++;
-        }
-        for(int i = 0; i < table.size(); i++){
+
+        List<List<String>> result = new ArrayList<>();
+
+        // Create the header row
+        List<String> header = new ArrayList<>();
+        header.add("Table");
+        header.addAll(foodItems);
+        result.add(header);
+
+        // Build rows for each table
+        for (int table : tables) {
             List<String> row = new ArrayList<>();
-            row.add(Integer.toString(table.get(i)));
-            for(int j = 0; j < temp.size() - 1; j++){
-                row.add(Integer.toString(freq[i][j]));
+            row.add(String.valueOf(table));
+            
+            Map<String, Integer> counts = tableToFoodCount.get(table);
+            
+            // For each food item in the sorted list, check if the table ordered it
+            for (String food : foodItems) {
+                int count = (counts != null) ? counts.getOrDefault(food, 0) : 0;
+                row.add(String.valueOf(count));
             }
-            ans.add(row);
+            result.add(row);
         }
-        return ans;
+
+        return result;
     }
 }
