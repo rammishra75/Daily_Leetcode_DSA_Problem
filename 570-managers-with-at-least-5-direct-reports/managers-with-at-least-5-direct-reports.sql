@@ -1,7 +1,12 @@
 SELECT
     name
-FROM 
+FROM
     Employee
-WHERE id IN 
-(SELECT managerId FROM Employee
-    GROUP BY managerId having COUNT(*) >= 5);
+where id in 
+(SELECT
+    managerId
+FROM
+    Employee
+GROUP BY managerId
+HAVING COUNT(*) >= 5
+);
