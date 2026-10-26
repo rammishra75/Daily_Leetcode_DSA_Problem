@@ -2,22 +2,19 @@ class Solution {
     public List<String> stringSequence(String target) {
         List<String> ans = new ArrayList<>();
         StringBuilder temp = new StringBuilder();
-        int ind = 0;
-        for(char c: target.toCharArray()){
-            char ch = 'a';
-            while(ch < c){
-                if(ind == 0) ans.add(Character.toString(ch));
-                else {
-                    temp.append(ch);
-                    ans.add(temp.toString());
-                    temp.deleteCharAt(temp.length() - 1);
-                }
-                ch++;
-            }
-            temp.append(ch);
+        
+        for (char c : target.toCharArray()) {
+            // Step 1: Simulate pressing Key 1 (Appends 'a')
+            temp.append('a');
             ans.add(temp.toString());
-            ind++;
+            
+            // Step 2: Simulate pressing Key 2 (Increments the last char until it matches c)
+            for (char ch = 'b'; ch <= c; ch++) {
+                temp.setCharAt(temp.length() - 1, ch);
+                ans.add(temp.toString());
+            }
         }
+        
         return ans;
     }
 }
