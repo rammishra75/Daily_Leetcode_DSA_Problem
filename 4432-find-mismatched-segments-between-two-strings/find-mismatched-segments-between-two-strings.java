@@ -1,28 +1,26 @@
 class Solution {
     public List<List<String>> findMismatchedSegments(String s1, String s2) {
-        List<List<String>> ans = new ArrayList<>();
-        int i = 0; 
         int n = s1.length();
-        int j = 0;
-        while(i < n){
-            if(s1.charAt(i) != s2.charAt(i)){
-                j = i;
-                while(j < n){
-                    if(s1.charAt(j) != s2.charAt(j)){
-                        j++;
-                    }
-                    else break;
+        int i = 0;
+        List<List<String>> list = new ArrayList<>();
+
+        while (i < n) {
+            if (s1.charAt(i) == s2.charAt(i)) {
+                i++;
+            } else {
+                int start = i;
+
+                while (i < n && s1.charAt(i) != s2.charAt(i)) {
+                    i++;
                 }
-                if(j - i + 1 > 0){
-                    List<String> temp = new ArrayList<>();
-                    temp.add(s1.substring(i, j));
-                    temp.add(s2.substring(i, j));
-                    ans.add(temp);
-                }
-                i = j;
+
+                String part1 = s1.substring(start, i);
+                String part2 = s2.substring(start, i);
+
+                list.add(Arrays.asList(part1, part2));
             }
-            i++;
         }
-        return ans;
+
+        return list;
     }
 }
