@@ -1,15 +1,15 @@
 class Solution {
-    public int partitionArray(int[] A, int k) {
-        Arrays.sort(A);
-        int res = 1, mn = A[0], mx = A[0];
-        for (int a: A) {
-            mn = Math.min(mn, a);
-            mx = Math.max(mx, a);
-            if (mx - mn > k) {
-                res++;
-                mn = mx = a;
+
+    public int partitionArray(int[] nums, int k) {
+        Arrays.sort(nums);
+        int ans = 1;
+        int rec = nums[0];
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] - rec > k) {
+                ans++;
+                rec = nums[i];
             }
         }
-        return res;
+        return ans;
     }
 }
